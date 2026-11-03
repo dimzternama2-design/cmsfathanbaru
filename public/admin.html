@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Panel Admin — Abzah CMS</title>
+<style>
+  :root {
+    --coral: #ff6582;
+    --coral-dark: #e94d6b;
+    --navy: #1b2a4a;
+    --muted: #6b7a90;
+    --cream: #fff7f2;
+    --line: #f0e2da;
+    --ok: #2f9e6f;
+    --danger: #e0455f;
+    --radius: 18px;
+    --shadow: 0 18px 40px rgba(27, 42, 74, 0.10);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", sans-serif;
+    background: var(--cream);
+    color: var(--navy);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Navbar ---------- */
+  header {
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+
+  .nav {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0.95rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--navy);
+    text-decoration: none;
+  }
+
+  .brand-mark {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--coral);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 1rem;
+    font-weight: 800;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.65rem 1.25rem;
+    border-radius: 999px;
+    border: 2px solid transparent;
+    font-family: inherit;
+    font-size: 0.93rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .btn-primary {
+    background: var(--coral);
+    color: #fff;
+    box-shadow: 0 12px 26px rgba(255, 101, 130, 0.32);
+  }
+
+  .btn-primary:hover { background: var(--coral-dark); transform: translateY(-2px); }
+
+  .btn-ghost {
+    background: #fff;
+    color: var(--navy);
+    border-color: var(--navy);
+  }
+
+  .btn-ghost:hover { background: var(--navy); color: #fff; }
+
+  .btn-danger {
+    background: #fff;
+    color: var(--danger);
+    border-color: rgba(224, 69, 95, 0.35);
+  }
+
+  .btn-danger:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
+
+  .btn-small { padding: 0.45rem 0.9rem; font-size: 0.83rem; }
+
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  /* ---------- Layout ---------- */
+  main {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 2.25rem 1.25rem 4rem;
+  }
+
+  .page-head { margin-bottom: 1.75rem; }
+
+  .badge {
+    display: inline-block;
+    background: rgba(255, 101, 130, 0.12);
+    color: var(--coral-dark);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    margin-bottom: 0.85rem;
+  }
+
+  h1 {
+    margin: 0 0 0.4rem;
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    letter-spacing: -0.02em;
+  }
+
+  .page-head p { margin: 0; color: var(--muted); font-size: 0.96rem; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+  }
+
+  .card h2 {
+    margin: 0 0 1.1rem;
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+  }
+
+  /* ---------- Form ---------- */
+  .field { margin-bottom: 1rem; }
+
+  .field label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+  }
+
+  .field input,
+  .field textarea {
+    width: 100%;
+    padding: 0.72rem 0.9rem;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--navy);
+    background: #fffdfc;
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    outline: none;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .field input:focus,
+  .field textarea:focus {
+    border-color: var(--coral);
+    box-shadow: 0 0 0 3px rgba(255, 101, 130, 0.15);
+  }
+
+  .field textarea { min-height: 180px; resize: vertical; line-height: 1.6; }
+
+  .form-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-top: 1.25rem;
+  }
+
+  /* ---------- Messages ---------- */
+  .message {
+    display: none;
+    margin-bottom: 1rem;
+    padding: 0.7rem 0.95rem;
+    border-radius: 12px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.45;
+  }
+
+  .message.show { display: block; }
+
+  .message.ok { background: rgba(47, 158, 111, 0.12); color: #1f7d55; }
+
+  .message.error { background: rgba(224, 69, 95, 0.12); color: #b52b41; }
+
+  /* ---------- Post list ---------- */
+  .list-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1.1rem;
+  }
+
+  .list-head h2 { margin: 0; }
+
+  .counter {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--muted);
+    background: var(--cream);
+    border-radius: 999px;
+    padding: 0.3rem 0.7rem;
+  }
+
+  .posts { display: grid; gap: 0.85rem; }
+
+  .post {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 1rem 1.05rem;
+    background: #fffdfc;
+    transition: border-color 0.18s ease, background 0.18s ease;
+  }
+
+  .post:hover { border-color: rgba(255, 101, 130, 0.5); background: #fff; }
+
+  .post h3 {
+    margin: 0 0 0.3rem;
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 0.55rem;
+  }
+
+  .post-excerpt {
+    margin: 0 0 0.85rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .post-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+  .empty-state {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.92rem;
+    padding: 2rem 1rem;
+    border: 1px dashed var(--line);
+    border-radius: 14px;
+  }
+
+  @media (max-width: 880px) {
+    .grid { grid-template-columns: 1fr; }
+    main { padding-top: 1.75rem; }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <a class="brand" href="/">
+        <span class="brand-mark">A</span>
+        Abzah CMS
+      </a>
+      <div class="nav-actions">
+        <a class="btn btn-ghost btn-small" href="/">Beranda</a>
+        <a class="btn btn-primary btn-small" href="#form-card">Tulis Konten</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-head">
+      <span class="badge">Panel Admin</span>
+      <h1>Kelola Konten Abzah CMS</h1>
+      <p>Tambah, ubah, dan hapus artikel. Semua perubahan langsung tersimpan ke Firestore.</p>
+    </div>
+
+    <div class="grid">
+      <!-- ===== Form ===== -->
+      <section class="card" id="form-card">
+        <h2 id="form-title">Tulis Konten Baru</h2>
+
+        <div class="message" id="form-message" role="status" aria-live="polite"></div>
+
+        <form id="post-form" novalidate>
+          <div class="field">
+            <label for="title">Judul</label>
+            <input type="text" id="title" name="title" placeholder="Judul artikel" required />
+          </div>
+
+          <div class="field">
+            <label for="author">Penulis</label>
+            <input type="text" id="author" name="author" placeholder="Admin" />
+          </div>
+
+          <div class="field">
+            <label for="content">Isi Konten</label>
+            <textarea id="content" name="content" placeholder="Tulis isi artikel di sini..." required></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="submit-btn">Simpan Konten</button>
+            <button type="button" class="btn btn-ghost" id="cancel-btn" hidden>Batal</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ===== Daftar konten ===== -->
+      <section class="card">
+        <div class="list-head">
+          <h2>Daftar Konten</h2>
+          <span class="counter" id="counter">0 konten</span>
+        </div>
+
+        <div class="message" id="list-message" role="status" aria-live="polite"></div>
+
+        <div class="posts" id="posts">
+          <div class="empty-state">Memuat konten...</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+<script>
+(function () {
+  'use strict';
+
+  var API = '/api/posts';
+
+  var form = document.getElementById('post-form');
+  var titleInput = document.getElementById('title');
+  var authorInput = document.getElementById('author');
+  var contentInput = document.getElementById('content');
+  var submitBtn = document.getElementById('submit-btn');
+  var cancelBtn = document.getElementById('cancel-btn');
+  var formTitle = document.getElementById('form-title');
+  var formMessage = document.getElementById('form-message');
+  var listMessage = document.getElementById('list-message');
+  var postsBox = document.getElementById('posts');
+  var counter = document.getElementById('counter');
+
+  var editingId = null;
+  var posts = [];
+
+  function showMessage(el, text, type) {
+    el.textContent = text;
+    el.className = 'message show ' + (type || 'ok');
+  }
+
+  function hideMessage(el) {
+    el.textContent = '';
+    el.className = 'message';
+  }
+
+  function formatDate(value) {
+    if (!value) return 'Baru saja';
+
+    var date = null;
+
+    if (typeof value === 'string' || typeof value === 'number') {
+      date = new Date(value);
+    } else if (typeof value === 'object') {
+      // Firestore Timestamp dari Admin SDK: { _seconds, _nanoseconds }
+      if (typeof value._seconds === 'number') {
+        date = new Date(value._seconds * 1000);
+      } else if (typeof value.seconds === 'number') {
+        date = new Date(value.seconds * 1000);
+      }
+    }
+
+    if (!date || isNaN(date.getTime())) return 'Baru saja';
+
+    return date.toLocaleString('id-ID', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+
+  function excerpt(text) {
+    var clean = String(text || '').replace(/\s+/g, ' ').trim();
+    if (clean.length <= 150) return clean;
+    return clean.slice(0, 150) + '...';
+  }
+
+  function renderPosts() {
+    postsBox.innerHTML = '';
+
+    counter.textContent = posts.length + ' konten';
+
+    if (!posts.length) {
+      var empty = document.createElement('div');
+      empty.className = 'empty-state';
+      empty.textContent = 'Belum ada konten. Tulis artikel pertama Anda di form sebelah.';
+      postsBox.appendChild(empty);
+      return;
+    }
+
+    posts.forEach(function (post) {
+      var item = document.createElement('article');
+      item.className = 'post';
+
+      var heading = document.createElement('h3');
+      heading.textContent = post.title || '(Tanpa judul)';
+
+      var meta = document.createElement('div');
+      meta.className = 'post-meta';
+      meta.textContent = (post.author || 'Admin') + ' • ' + formatDate(post.createdAt);
+
+      var body = document.createElement('p');
+      body.className = 'post-excerpt';
+      body.textContent = excerpt(post.content) || 'Tanpa isi.';
+
+      var actions = document.createElement('div');
+      actions.className = 'post-actions';
+
+      var editBtn = document.createElement('button');
+      editBtn.type = 'button';
+      editBtn.className = 'btn btn-ghost btn-small';
+      editBtn.textContent = 'Ubah';
+      editBtn.addEventListener('click', function () { startEdit(post); });
+
+      var deleteBtn = document.createElement('button');
+      deleteBtn.type = 'button';
+      deleteBtn.className = 'btn btn-danger btn-small';
+      deleteBtn.textContent = 'Hapus';
+      deleteBtn.addEventListener('click', function () { removePost(post, deleteBtn); });
+
+      actions.appendChild(editBtn);
+      actions.appendChild(deleteBtn);
+
+      item.appendChild(heading);
+      item.appendChild(meta);
+      item.appendChild(body);
+      item.appendChild(actions);
+
+      postsBox.appendChild(item);
+    });
+  }
+
+  function loadPosts() {
+    hideMessage(listMessage);
+    postsBox.innerHTML = '<div class="empty-state">Memuat konten...</div>';
+
+    fetch(API, { headers: { Accept: 'application/json' } })
+      .then(function (res) {
+        if (!res.ok) throw new Error('Gagal memuat konten (HTTP ' + res.status + ')');
+        return res.json();
+      })
+      .then(function (payload) {
+        posts = Array.isArray(payload && payload.data) ? payload.data : [];
+        renderPosts();
+      })
+      .catch(function (err) {
+        posts = [];
+        renderPosts();
+        showMessage(listMessage, err.message, 'error');
+      });
+  }
+
+  function startEdit(post) {
+    editingId = post.id;
+    formTitle.textContent = 'Ubah Konten';
+    submitBtn.textContent = 'Perbarui Konten';
+    cancelBtn.hidden = false;
+
+    titleInput.value = post.title || '';
+    authorInput.value = post.author || '';
+    contentInput.value = post.content || '';
+
+    hideMessage(formMessage);
+    document.getElementById('form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    titleInput.focus();
+  }
+
+  function resetForm() {
+    editingId = null;
+    formTitle.textContent = 'Tulis Konten Baru';
+    submitBtn.textContent = 'Simpan Konten';
+    cancelBtn.hidden = true;
+    form.reset();
+    hideMessage(formMessage);
+  }
+
+  function removePost(post, button) {
+    if (!window.confirm('Hapus konten "' + (post.title || 'Tanpa judul') + '"?')) return;
+
+    button.disabled = true;
+
+    fetch(API + '/' + encodeURIComponent(post.id), { method: 'DELETE' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('Gagal menghapus konten (HTTP ' + res.status + ')');
+        return res.json();
+      })
+      .then(function () {
+        if (editingId === post.id) resetForm();
+        showMessage(listMessage, 'Konten berhasil dihapus.', 'ok');
+        loadPosts();
+      })
+      .catch(function (err) {
+        button.disabled = false;
+        showMessage(listMessage, err.message, 'error');
+      });
+  }
+
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    var title = titleInput.value.trim();
+    var content = contentInput.value.trim();
+    var author = authorInput.value.trim();
+
+    if (!title || !content) {
+      showMessage(formMessage, 'Judul dan isi konten wajib diisi.', 'error');
+      return;
+    }
+
+    var payload = { title: title, content: content, author: author || 'Admin' };
+    var isEdit = Boolean(editingId);
+
+    submitBtn.disabled = true;
+    hideMessage(formMessage);
+
+    fetch(isEdit ? API + '/' + encodeURIComponent(editingId) : API, {
+      method: isEdit ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(function (res) {
+        return res.json().then(function (data) {
+          if (!res.ok) throw new Error(data && data.error ? data.error : 'Gagal menyimpan (HTTP ' + res.status + ')');
+          return data;
+        });
+      })
+      .then(function () {
+        resetForm();
+        showMessage(formMessage, isEdit ? 'Konten berhasil diperbarui.' : 'Konten berhasil ditambahkan.', 'ok');
+        loadPosts();
+      })
+      .catch(function (err) {
+        showMessage(formMessage, err.message, 'error');
+      })
+      .finally(function () {
+        submitBtn.disabled = false;
+      });
+  });
+
+  cancelBtn.addEventListener('click', resetForm);
+
+  loadPosts();
+})();
+</script>
+</body>
+</html>
